@@ -39,11 +39,11 @@ hist(totsteps, main="Total steps per day",xlab="Total steps", ylab="Frequency")
 
 ```r
 #What is mean total number of steps taken per day?
-mean(totsteps)
+round(mean(totsteps))
 ```
 
 ```
-## [1] 10766.19
+## [1] 10766
 ```
 
 ```r
@@ -85,5 +85,76 @@ names(which.max(int_average))
 ## Imputing missing values
 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
 
+```r
+##Count incomplete cases
+incompl <- !complete.cases(act)
+sum(incompl)
+```
+
+```
+## [1] 2304
+```
+
+
+Use the Hmisc packages to generate missing values , based on the mean of a specific column (in this case, steps)
+install.packages("Hmisc")
+
+
+```r
+library(Hmisc)
+```
+
+```
+## Loading required package: grid
+## Loading required package: lattice
+## Loading required package: survival
+## Loading required package: splines
+## Loading required package: Formula
+## 
+## Attaching package: 'Hmisc'
+## 
+## The following objects are masked from 'package:base':
+## 
+##     format.pval, round.POSIXt, trunc.POSIXt, units
+```
+
+```r
+act$steps <- with(act, impute(steps, mean))
+comp_act <- split(act, act$date)
+comp_act <- sapply(comp_act,function(x) sum(x$steps))
+hist(comp_act, main="Total steps per day with imputed data",xlab="Total steps", ylab="Frequency")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+
+```r
+#What is mean total number of steps taken per day?
+round(mean(comp_act))
+```
+
+```
+## [1] 10766
+```
+
+```r
+round(median(comp_act))
+```
+
+```
+## [1] 10766
+```
+The result is that the mean and median are the same now.
+Also the frequency is chnaged in the Histogram
+
+
+```r
+par(mfrow=c(1,2))
+hist(totsteps, main="Total steps per day",xlab="Total steps", ylab="Frequency")
+hist(comp_act, main="Total steps per day with imputed data",xlab="Total steps", ylab="Frequency")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
+

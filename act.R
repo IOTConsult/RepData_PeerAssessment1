@@ -18,7 +18,7 @@ totsteps <- sapply(compl_act_day,function(x) sum(x$steps))
 ##Create a Histogram of the total number of steps during each day
 hist(totsteps, main="Total steps per day",xlab="Total steps", ylab="Frequency")
 #What is mean total number of steps taken per day?
-mean(totsteps)
+round(mean(totsteps))
 median(totsteps)
 
 
