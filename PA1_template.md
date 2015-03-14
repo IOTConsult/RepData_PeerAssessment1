@@ -143,8 +143,7 @@ round(median(comp_act))
 ```
 ## [1] 10766
 ```
-The result is that the mean and median are the same now.
-Also the frequency is chnaged in the Histogram
+
 
 
 ```r
@@ -155,6 +154,33 @@ hist(comp_act, main="Total steps per day with imputed data",xlab="Total steps", 
 
 ![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 
+The result is that the mean and median are the same now.
+Also the frequency is changed in the Histogram
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```r
+act$day <- weekdays(act$date)
+for (i in 1:nrow(act)) {
+        if(act[i,]$day %in% c("Saturday","Sunday")) {
+                act[i,]$day <-"Weekend"
+        }
+        else{
+                act[i,]$day <- "Weekday"
+        }
+}
+```
+##Create the plot
+act_int <- split(act, act$interval)
+act_average <- sapply(act_int,function(x) mean(x$steps))
+act_average <- as.data.frame(act_average)
+par(mfrow=c(1,1))  
+
+##nok OK (missing days)
+with(act_average, plot(steps ~ interval, type="n", main="Weekday vs Weekend"))  
+with(act_average[act_average$day == "Weekday",], lines(steps ~ interval, type="l", col="2"))  
+with(act_average[act_average$day == "Weekend",], lines(steps ~ interval, type="l", col="3" ))  
+legend("topright", lty=c(1,1), col = c("2", "3"), legend = c("weekday", "weekend"), seg.len=3)
+
+
 
